@@ -77,7 +77,9 @@ export default function Campfire() {
     <div className="relative grow flex flex-col items-center justify-center">
       <div className="top-4 right-4 absolute">
         <h1 className="text-4xl">{campName}</h1>
-        <div className="text-right text-lg">33 present</div>
+        <div className="text-right text-lg">
+          {members.filter((m) => m.isConnected).length} present
+        </div>
       </div>
       <div className="relative w-full flex justify-center">
         <div className="absolute bottom-0 flex gap-6 justify-center">
