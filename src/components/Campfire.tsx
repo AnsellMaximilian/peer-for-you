@@ -2,6 +2,9 @@ import campFire from "../assets/campfire.svg";
 import { motion, Variants } from "framer-motion";
 import { useCamp } from "../context/CampContext";
 import PeerMember from "./PeerMember";
+import { useSpace, useMembers } from "@ably/spaces/react";
+import { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 const fireVariants: Variants = {
   animate: {
@@ -14,7 +17,23 @@ const fireVariants: Variants = {
 };
 
 export default function Campfire() {
+  const { space } = useSpace(() => {
+    // console.log(update);
+  });
+
+  const { members } = useMembers();
+
   const { campName } = useCamp();
+
+  useEffect(() => {
+    if (space) {
+      space.subscribe("update", (state) => {
+        console.log(state);
+      });
+      space.enter({ id: uuidv4() });
+    }
+  }, [space]);
+
   return (
     <div className="relative grow flex flex-col items-center justify-center">
       <div className="top-4 right-4 absolute">
@@ -23,12 +42,19 @@ export default function Campfire() {
       </div>
       <div className="relative w-full flex justify-center">
         <div className="absolute bottom-0 flex gap-6 justify-center">
-          <PeerMember orientation="RIGHT" />
-          <PeerMember orientation="RIGHT" />
-          <PeerMember orientation="RIGHT" />
-          <PeerMember />
-          <PeerMember />
-          <PeerMember />
+          {members
+            .slice(0, 6)
+            .filter((m) => m.isConnected)
+            .map((member, index) => {
+              return (
+                <PeerMember
+                  key={member.connectionId + index}
+                  orientation={
+                    index + 1 > Math.ceil(members.length / 2) ? "LEFT" : "RIGHT"
+                  }
+                />
+              );
+            })}
         </div>
         <motion.div
           variants={fireVariants}

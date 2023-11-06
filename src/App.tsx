@@ -1,15 +1,27 @@
+import { Realtime } from "ably";
+import { AblyProvider } from "ably/react";
+import { SpaceProvider, SpacesProvider } from "@ably/spaces/react";
+
 import "./App.css";
 import Campfire from "./components/Campfire";
 import Input from "./components/Input";
 import { useCamp } from "./context/CampContext";
 import { motion, AnimatePresence } from "framer-motion";
+import Spaces from "@ably/spaces";
+
+const client = new Realtime.Promise({
+  key: import.meta.env.VITE_ABLY_API_KEY,
+  clientId: "peer-for-you",
+});
+
+const spaces = new Spaces(client);
 
 function App() {
   const { setCampfireMode, setCampName, campName, campfireMode } = useCamp();
   return (
     <div className="h-screen bg-black flex flex-col items-center justify-center text-white">
       <AnimatePresence mode="wait">
-        {campfireMode ? (
+        {campfireMode && campName ? (
           <motion.div
             className="grow flex flex-col w-full"
             key="campfire"
@@ -17,7 +29,13 @@ function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <Campfire />
+            <AblyProvider client={client}>
+              <SpacesProvider client={spaces}>
+                <SpaceProvider name={campName}>
+                  <Campfire />
+                </SpaceProvider>
+              </SpacesProvider>
+            </AblyProvider>
           </motion.div>
         ) : (
           <motion.div key="intro" exit={{ opacity: 0 }}>
