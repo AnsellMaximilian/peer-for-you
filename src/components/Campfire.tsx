@@ -130,22 +130,27 @@ export default function Campfire() {
             <div key={m}>{m}</div>
           ))}
         </div>
-        <div className="flex gap-1">
+        <form
+          className="flex gap-1"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setMessage("");
+            chatChannel.publish("add", message);
+          }}
+        >
           <Input
+            autoFocus
             placeholder="Chat message"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
           <button
-            onClick={() => {
-              setMessage("");
-              chatChannel.publish("add", message);
-            }}
+            type="submit"
             className="bg-white text-black rounded-md px-4 py-2 font-bold hover:bg-slate-200"
           >
             Chat
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
