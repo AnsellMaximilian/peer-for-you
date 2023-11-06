@@ -64,6 +64,7 @@ function App() {
             >
               <h2>Create A Campfire?</h2>
               <Input
+                autoFocus
                 placeholder="Ex: Mental Support"
                 value={campName}
                 onChange={(e) => setCampName(e.target.value)}
