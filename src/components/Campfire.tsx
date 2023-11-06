@@ -9,6 +9,11 @@ import { useEffect, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Input from "./Input";
 
+export type Message = {
+  id: string;
+  content: string;
+};
+
 const fireVariants: Variants = {
   animate: {
     opacity: [0.1, 0, 0.1],
@@ -30,13 +35,12 @@ export default function Campfire() {
 
   const ablyClient = useAbly();
 
-  const [message, setMessage] = useState("");
+  const [messageContent, setMessageContent] = useState("");
 
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
-  const [currentDisplayedMessage, setCurrentDisplayedMessage] = useState<
-    null | string
-  >(null);
+  const [currentDisplayedMessage, setCurrentDisplayedMessage] =
+    useState<null | Message>(null);
 
   const chatChannel = useMemo(() => {
     return ablyClient.channels.get(`${campName}`);
@@ -44,7 +48,7 @@ export default function Campfire() {
 
   useEffect(() => {
     const listener = (ablyMessage: Types.Message) => {
-      const message = ablyMessage.data as string;
+      const message = ablyMessage.data as Message;
       setMessages((prev) => [...prev, message]);
       setCurrentDisplayedMessage(message);
     };
@@ -65,7 +69,7 @@ export default function Campfire() {
     if (currentDisplayedMessage) {
       setTimeout(() => {
         setCurrentDisplayedMessage(null);
-      }, Math.max(3000, currentDisplayedMessage.split(" ").length * 500));
+      }, Math.max(3000, currentDisplayedMessage.content.split(" ").length * 500));
     }
   }, [currentDisplayedMessage]);
 
@@ -118,7 +122,7 @@ export default function Campfire() {
               <div className="absolute bg-white h-3 w-3 top-[calc(100%+3px)] right-[calc(100%+3px)]"></div>
               <div className="absolute bg-white h-2 w-2 top-[calc(100%+18px)] right-[calc(100%+18px)]"></div>
               <div className="w-64 max-h-64 p-4 overflow-y-auto">
-                {currentDisplayedMessage}
+                {currentDisplayedMessage.content}
               </div>
             </motion.div>
           )}
@@ -127,22 +131,29 @@ export default function Campfire() {
       <div className="absolute w-1/2 left-4 bottom-4 border border-white rounded-md p-4">
         <div className="flex-col gap-2 hidden">
           {messages.map((m) => (
-            <div key={m}>{m}</div>
+            <div key={m.id}>{m.content}</div>
           ))}
         </div>
         <form
           className="flex gap-1"
           onSubmit={(e) => {
             e.preventDefault();
-            setMessage("");
-            chatChannel.publish("add", message);
+
+            if (!currentDisplayedMessage) {
+              const msg: Message = {
+                id: uuidv4(),
+                content: messageContent,
+              };
+              setMessageContent("");
+              chatChannel.publish("add", msg);
+            }
           }}
         >
           <Input
             autoFocus
             placeholder="Chat message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            value={messageContent}
+            onChange={(e) => setMessageContent(e.target.value)}
           />
           <button
             type="submit"
