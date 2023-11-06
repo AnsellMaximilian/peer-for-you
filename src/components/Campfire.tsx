@@ -1,5 +1,7 @@
 import campFire from "../assets/campfire.svg";
 import { motion, Variants } from "framer-motion";
+import { useCamp } from "../context/CampContext";
+import PeerMember from "./PeerMember";
 
 const fireVariants: Variants = {
   animate: {
@@ -11,14 +13,26 @@ const fireVariants: Variants = {
   },
 };
 
-export default function Meeting() {
+export default function Campfire() {
+  const { campName } = useCamp();
   return (
-    <div>
-      <div className="relative">
+    <div className="relative grow flex flex-col items-center justify-center">
+      <div className="top-4 right-4 absolute">
+        <h1 className="text-4xl">{campName}</h1>
+        <div className="text-right text-lg">33 present</div>
+      </div>
+      <div className="relative w-full flex justify-center">
+        <div className="absolute bottom-0 flex gap-6 justify-center">
+          <PeerMember orientation="RIGHT" />
+          <PeerMember orientation="RIGHT" />
+          <PeerMember orientation="RIGHT" />
+          <PeerMember />
+          <PeerMember />
+          <PeerMember />
+        </div>
         <motion.div
           variants={fireVariants}
           animate="animate"
-          transition={{ duration: 100000 }}
           className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] bg-yellow-200 w-[500px] h-[500px] rounded-full"
         ></motion.div>
         <motion.div
