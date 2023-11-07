@@ -1,13 +1,15 @@
 import { Realtime } from "ably";
 import { AblyProvider } from "ably/react";
 import { SpaceProvider, SpacesProvider } from "@ably/spaces/react";
-
+import { v4 as uuidv4 } from "uuid";
 import "./App.css";
 import Campfire from "./components/Campfire";
 import Input from "./components/Input";
 import { useCamp } from "./context/CampContext";
 import { motion, AnimatePresence } from "framer-motion";
 import Spaces from "@ably/spaces";
+import { useUser } from "./context/UserContext";
+import { useMemo } from "react";
 
 const client = new Realtime.Promise({
   key: import.meta.env.VITE_ABLY_API_KEY,
@@ -17,7 +19,18 @@ const client = new Realtime.Promise({
 const spaces = new Spaces(client);
 
 function App() {
-  const { setCampfireMode, setCampName, campName, campfireMode } = useCamp();
+  const {
+    setCampfireMode,
+    setCampName,
+    campName,
+    campfireMode,
+    setId,
+    id: campId,
+  } = useCamp();
+  const { id: userId } = useUser();
+
+  const connection = useMemo(() => `${campId}:${userId}`, [userId, campId]);
+
   return (
     <div className="h-screen bg-black flex flex-col items-center justify-center text-white">
       <AnimatePresence mode="wait">
@@ -31,7 +44,7 @@ function App() {
           >
             <AblyProvider client={client}>
               <SpacesProvider client={spaces}>
-                <SpaceProvider name={campName}>
+                <SpaceProvider name={connection}>
                   <Campfire />
                 </SpaceProvider>
               </SpacesProvider>
@@ -60,6 +73,7 @@ function App() {
               onSubmit={(e) => {
                 e.preventDefault();
                 setCampfireMode(true);
+                setId(uuidv4());
               }}
             >
               <h2>Create A Campfire?</h2>

@@ -5,6 +5,8 @@ export interface CampContextData {
   setCampName: (name: string) => void;
   campfireMode: boolean;
   setCampfireMode: (value: boolean) => void;
+  id: string;
+  setId: (name: string) => void;
 }
 
 export const CampContext = createContext<CampContextData>({
@@ -12,6 +14,8 @@ export const CampContext = createContext<CampContextData>({
   setCampName: () => {},
   campfireMode: false,
   setCampfireMode: () => {},
+  id: "",
+  setId: () => {},
 });
 
 export const CampContextProvider: React.FC<{ children: ReactNode }> = ({
@@ -19,10 +23,13 @@ export const CampContextProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [campName, setCampName] = useState("");
   const [campfireMode, setCampfireMode] = useState(false);
+  const [id, setId] = useState("");
 
   return (
     <CampContext.Provider
       value={{
+        id,
+        setId,
         campName,
         setCampName,
         campfireMode,

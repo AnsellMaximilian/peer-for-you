@@ -8,6 +8,7 @@ import { Types } from "ably";
 import { useEffect, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Input from "./Input";
+import { useUser } from "../context/UserContext";
 
 export type Message = {
   id: string;
@@ -31,9 +32,12 @@ export default function Campfire() {
 
   const { members } = useMembers();
 
-  const { campName } = useCamp();
+  const { campName, id: campId } = useCamp();
+  const { id: userId } = useUser();
 
   const ablyClient = useAbly();
+
+  const connection = useMemo(() => `${campId}:${userId}`, [userId, campId]);
 
   const [messageContent, setMessageContent] = useState("");
 
@@ -43,12 +47,13 @@ export default function Campfire() {
     useState<null | Message>(null);
 
   const chatChannel = useMemo(() => {
-    return ablyClient.channels.get(`${campName}`);
-  }, [ablyClient, campName]);
+    return ablyClient.channels.get(`${connection}`);
+  }, [connection, ablyClient.channels]);
 
   useEffect(() => {
     const listener = (ablyMessage: Types.Message) => {
       const message = ablyMessage.data as Message;
+      console.log(ablyMessage);
       setMessages((prev) => [...prev, message]);
       setCurrentDisplayedMessage(message);
     };
@@ -61,9 +66,9 @@ export default function Campfire() {
 
   useEffect(() => {
     if (space) {
-      space.enter({ id: uuidv4() });
+      space.enter({ id: userId });
     }
-  }, [space]);
+  }, [space, userId]);
 
   useEffect(() => {
     if (currentDisplayedMessage) {
