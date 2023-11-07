@@ -6,4 +6,3 @@ A web application dedicated to fostering anonymity and privacy-focused online pe
 
 - Optional username/color association
 - Ban/kick user
-- Better presence for peer member

@@ -89,19 +89,29 @@ export default function Campfire({ connection }: { connection: string }) {
       </div>
       <div className="relative w-full flex justify-center">
         <div className="absolute bottom-0 flex gap-6 justify-center">
-          {members
-            .slice(0, 6)
-            .filter((m) => m.isConnected)
-            .map((member, index) => {
-              return (
-                <PeerMember
-                  key={member.connectionId + index}
-                  orientation={
-                    index + 1 > Math.ceil(members.length / 2) ? "LEFT" : "RIGHT"
-                  }
-                />
-              );
-            })}
+          <AnimatePresence>
+            {members
+              .slice(0, 6)
+              .filter((m) => m.isConnected)
+              .map((member, index) => {
+                return (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <PeerMember
+                      key={member.connectionId + index}
+                      orientation={
+                        index + 1 > Math.ceil(members.length / 2)
+                          ? "LEFT"
+                          : "RIGHT"
+                      }
+                    />
+                  </motion.div>
+                );
+              })}
+          </AnimatePresence>
         </div>
         <motion.div
           variants={fireVariants}
