@@ -15,6 +15,7 @@ import Invite from "./Invite";
 export type Message = {
   id: string;
   content: string;
+  userId?: string;
 };
 
 const fireVariants: Variants = {
@@ -31,6 +32,8 @@ export default function Campfire({ connection }: { connection: string }) {
   const { space } = useSpace(() => {
     // console.log(update);
   });
+
+  const [, hostId] = connection.split(":");
 
   const { members } = useMembers();
 
@@ -142,6 +145,11 @@ export default function Campfire({ connection }: { connection: string }) {
               <div className="w-64 max-h-64 p-4 overflow-y-auto">
                 {currentDisplayedMessage.content}
               </div>
+              {hostId === currentDisplayedMessage.userId && (
+                <div className="absolute top-0 left-0 font-bold text-xs pl-2 pt-1">
+                  Host
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
@@ -162,6 +170,7 @@ export default function Campfire({ connection }: { connection: string }) {
                 const msg: Message = {
                   id: uuidv4(),
                   content: messageContent,
+                  userId: userId,
                 };
                 setMessageContent("");
                 chatChannel.publish("add", msg);
