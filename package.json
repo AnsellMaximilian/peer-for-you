@@ -13,6 +13,8 @@
     "@ably/spaces": "^0.2.0",
     "ably": "^1.2.47",
     "framer-motion": "^10.16.4",
+    "html2canvas": "^1.4.1",
+    "qr-code-styling": "^1.6.0-rc.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "uuid": "^9.0.1"

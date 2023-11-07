@@ -4,10 +4,6 @@ A web application dedicated to fostering anonymity and privacy-focused online pe
 
 # Todo
 
-- Invites
-  - Generating invite link/card
-  - QR Code
-  - Joining groups
 - Optional username/color association
 - Ban/kick user
 - Better presence for peer member

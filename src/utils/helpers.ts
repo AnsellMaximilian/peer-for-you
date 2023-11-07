@@ -1,3 +1,5 @@
+import html2canvas from "html2canvas";
+
 export const getConnectionFromURL = () => {
   const url = new URL(window.location.href);
 
@@ -38,6 +40,25 @@ export const isConnectionValid = (connection: string) => {
 export const copyTextToClipboard = async (text: string) => {
   try {
     await navigator.clipboard.writeText(text);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const copyElementToClipboard = async (el: HTMLElement) => {
+  try {
+    const canvas = await html2canvas(el);
+
+    canvas.toBlob((blob) => {
+      if (blob) {
+        navigator.clipboard.write([
+          new ClipboardItem({
+            "image/png": blob,
+          }),
+        ]);
+      }
+    });
     return true;
   } catch (error) {
     return false;
