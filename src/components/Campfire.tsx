@@ -99,9 +99,9 @@ export default function Campfire({ connection }: { connection: string }) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
+                    key={member.connectionId + index}
                   >
                     <PeerMember
-                      key={member.connectionId + index}
                       orientation={
                         index + 1 > Math.ceil(members.length / 2)
                           ? "LEFT"
