@@ -13,15 +13,12 @@ export default function Modal({ open, handleOpen, children }: Props) {
       {open && (
         <motion.div
           onClick={() => handleOpen(false)}
-          className="fixed inset-0 flex items-center justify-center z-20 bg-[rgba(0,0,0,0.5)]"
+          className="fixed inset-0 flex items-center justify-center z-20 bg-[rgba(0,0,0,0.5)] p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <div
-            className="grow flex items-center justify-center p-4 max-w-full"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="" onClick={(e) => e.stopPropagation()}>
             {children}
           </div>
         </motion.div>
