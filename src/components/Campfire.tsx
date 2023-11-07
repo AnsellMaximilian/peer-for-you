@@ -162,7 +162,7 @@ export default function Campfire({ connection }: { connection: string }) {
         </div>
         <div className="flex justify-between">
           <form
-            className="flex gap-1"
+            className="flex gap-1 w-full md:w-auto"
             onSubmit={(e) => {
               e.preventDefault();
 
@@ -182,7 +182,7 @@ export default function Campfire({ connection }: { connection: string }) {
               placeholder="Chat message"
               value={messageContent}
               onChange={(e) => setMessageContent(e.target.value)}
-              extraClassName="w-64"
+              extraClassName="grow md:grow-0 sm:w-64"
             />
             <button
               type="submit"
