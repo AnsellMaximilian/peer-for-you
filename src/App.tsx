@@ -37,10 +37,10 @@ function App() {
     const connectionFromURL = getConnectionFromURL();
 
     if (connectionFromURL) {
-      const [campId] = connectionFromURL.split(":");
+      const [, , campName] = connectionFromURL.split(":");
       setConnection(connectionFromURL);
       setCampfireMode(true);
-      setCampName(campId);
+      setCampName(campName);
     }
   }, [setCampName, setCampfireMode]);
 
@@ -89,7 +89,7 @@ function App() {
                   setCampfireMode(true);
                   const id = uuidv4();
                   setId(id);
-                  setConnection(`${id}:${userId}`);
+                  setConnection(`${id}:${userId}:${campName}`);
                 }
               }}
             >
