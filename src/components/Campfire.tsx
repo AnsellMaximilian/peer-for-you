@@ -9,6 +9,8 @@ import { useEffect, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Input from "./Input";
 import { useUser } from "../context/UserContext";
+import Modal from "./Modal";
+import Invite from "./Invite";
 
 export type Message = {
   id: string;
@@ -25,23 +27,23 @@ const fireVariants: Variants = {
   },
 };
 
-export default function Campfire() {
+export default function Campfire({ connection }: { connection: string }) {
   const { space } = useSpace(() => {
     // console.log(update);
   });
 
   const { members } = useMembers();
 
-  const { campName, id: campId } = useCamp();
+  const { campName } = useCamp();
   const { id: userId } = useUser();
 
   const ablyClient = useAbly();
 
-  const connection = useMemo(() => `${campId}:${userId}`, [userId, campId]);
-
   const [messageContent, setMessageContent] = useState("");
 
   const [messages, setMessages] = useState<Message[]>([]);
+
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
   const [currentDisplayedMessage, setCurrentDisplayedMessage] =
     useState<null | Message>(null);
@@ -53,7 +55,6 @@ export default function Campfire() {
   useEffect(() => {
     const listener = (ablyMessage: Types.Message) => {
       const message = ablyMessage.data as Message;
-      console.log(ablyMessage);
       setMessages((prev) => [...prev, message]);
       setCurrentDisplayedMessage(message);
     };
@@ -135,41 +136,54 @@ export default function Campfire() {
           )}
         </AnimatePresence>
       </div>
-      <div className="absolute w-1/2 left-4 bottom-4 border border-white rounded-md p-4">
+      <div className="absolute inset-x-4 bottom-4 border border-white rounded-md p-4">
         <div className="flex-col gap-2 hidden">
           {messages.map((m) => (
             <div key={m.id}>{m.content}</div>
           ))}
         </div>
-        <form
-          className="flex gap-1"
-          onSubmit={(e) => {
-            e.preventDefault();
+        <div className="flex justify-between">
+          <form
+            className="flex gap-1"
+            onSubmit={(e) => {
+              e.preventDefault();
 
-            if (!currentDisplayedMessage) {
-              const msg: Message = {
-                id: uuidv4(),
-                content: messageContent,
-              };
-              setMessageContent("");
-              chatChannel.publish("add", msg);
-            }
-          }}
-        >
-          <Input
-            autoFocus
-            placeholder="Chat message"
-            value={messageContent}
-            onChange={(e) => setMessageContent(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="bg-white text-black rounded-md px-4 py-2 font-bold hover:bg-slate-200"
+              if (!currentDisplayedMessage) {
+                const msg: Message = {
+                  id: uuidv4(),
+                  content: messageContent,
+                };
+                setMessageContent("");
+                chatChannel.publish("add", msg);
+              }
+            }}
           >
-            Chat
-          </button>
-        </form>
+            <Input
+              autoFocus
+              placeholder="Chat message"
+              value={messageContent}
+              onChange={(e) => setMessageContent(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="bg-white text-black rounded-md px-4 py-2 font-bold hover:bg-slate-200"
+            >
+              Chat
+            </button>
+          </form>
+          <div>
+            <button
+              onClick={() => setInviteModalOpen(true)}
+              className="border-white border-2 rounded-md px-4 py-2 font-bold hover:opacity-60"
+            >
+              Invite
+            </button>
+          </div>
+        </div>
       </div>
+      <Modal open={inviteModalOpen} handleOpen={setInviteModalOpen}>
+        <Invite connection={connection} />
+      </Modal>
     </div>
   );
 }

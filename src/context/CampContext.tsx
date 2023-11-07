@@ -1,4 +1,5 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
+import { useUser } from "./UserContext";
 
 export interface CampContextData {
   campName: string;
@@ -7,6 +8,7 @@ export interface CampContextData {
   setCampfireMode: (value: boolean) => void;
   id: string;
   setId: (name: string) => void;
+  getConnection: () => string;
 }
 
 export const CampContext = createContext<CampContextData>({
@@ -16,6 +18,7 @@ export const CampContext = createContext<CampContextData>({
   setCampfireMode: () => {},
   id: "",
   setId: () => {},
+  getConnection: () => "",
 });
 
 export const CampContextProvider: React.FC<{ children: ReactNode }> = ({
@@ -24,6 +27,11 @@ export const CampContextProvider: React.FC<{ children: ReactNode }> = ({
   const [campName, setCampName] = useState("");
   const [campfireMode, setCampfireMode] = useState(false);
   const [id, setId] = useState("");
+  const { id: userId } = useUser();
+
+  const getConnection = () => {
+    return `${id}:${userId}`;
+  };
 
   return (
     <CampContext.Provider
@@ -34,6 +42,7 @@ export const CampContextProvider: React.FC<{ children: ReactNode }> = ({
         setCampName,
         campfireMode,
         setCampfireMode,
+        getConnection,
       }}
     >
       {children}

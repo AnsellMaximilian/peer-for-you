@@ -8,8 +8,9 @@ import Input from "./components/Input";
 import { useCamp } from "./context/CampContext";
 import { motion, AnimatePresence } from "framer-motion";
 import Spaces from "@ably/spaces";
+import { useState, useEffect } from "react";
+import { getConnectionFromURL, isConnectionValid } from "./utils/helpers";
 import { useUser } from "./context/UserContext";
-import { useMemo } from "react";
 
 const client = new Realtime.Promise({
   key: import.meta.env.VITE_ABLY_API_KEY,
@@ -25,16 +26,28 @@ function App() {
     campName,
     campfireMode,
     setId,
-    id: campId,
+    getConnection,
   } = useCamp();
+
   const { id: userId } = useUser();
 
-  const connection = useMemo(() => `${campId}:${userId}`, [userId, campId]);
+  const [connection, setConnection] = useState(getConnection());
+
+  useEffect(() => {
+    const connectionFromURL = getConnectionFromURL();
+
+    if (connectionFromURL) {
+      const [campId] = connectionFromURL.split(":");
+      setConnection(connectionFromURL);
+      setCampfireMode(true);
+      setCampName(campId);
+    }
+  }, [setCampName, setCampfireMode]);
 
   return (
     <div className="h-screen bg-black flex flex-col items-center justify-center text-white">
       <AnimatePresence mode="wait">
-        {campfireMode && campName ? (
+        {campfireMode && isConnectionValid(connection) ? (
           <motion.div
             className="grow flex flex-col w-full"
             key="campfire"
@@ -45,7 +58,7 @@ function App() {
             <AblyProvider client={client}>
               <SpacesProvider client={spaces}>
                 <SpaceProvider name={connection}>
-                  <Campfire />
+                  <Campfire connection={connection} />
                 </SpaceProvider>
               </SpacesProvider>
             </AblyProvider>
@@ -73,7 +86,9 @@ function App() {
               onSubmit={(e) => {
                 e.preventDefault();
                 setCampfireMode(true);
-                setId(uuidv4());
+                const id = uuidv4();
+                setId(id);
+                setConnection(`${id}:${userId}`);
               }}
             >
               <h2>Create A Campfire?</h2>
