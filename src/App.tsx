@@ -85,10 +85,12 @@ function App() {
               className="text-2xl mt-8 text-center space-y-3"
               onSubmit={(e) => {
                 e.preventDefault();
-                setCampfireMode(true);
-                const id = uuidv4();
-                setId(id);
-                setConnection(`${id}:${userId}`);
+                if (campName) {
+                  setCampfireMode(true);
+                  const id = uuidv4();
+                  setId(id);
+                  setConnection(`${id}:${userId}`);
+                }
               }}
             >
               <h2>Create A Campfire?</h2>

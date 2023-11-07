@@ -148,7 +148,7 @@ export default function Campfire({ connection }: { connection: string }) {
             onSubmit={(e) => {
               e.preventDefault();
 
-              if (!currentDisplayedMessage) {
+              if (!currentDisplayedMessage && messageContent) {
                 const msg: Message = {
                   id: uuidv4(),
                   content: messageContent,
