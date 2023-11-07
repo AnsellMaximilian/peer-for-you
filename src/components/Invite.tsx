@@ -61,7 +61,7 @@ export default function Invite({ connection }: { connection: string }) {
   };
 
   return (
-    <div className="space-y-4 w-96 text-xl">
+    <div className="space-y-4 w-full md:w-96 text-xl">
       <div className="p-4 bg-black rounded-md border border-white">
         <div className="relative">
           <div>Give people this link so they can join</div>
@@ -86,7 +86,7 @@ export default function Invite({ connection }: { connection: string }) {
                 </motion.span>
               )}
             </AnimatePresence>
-            <span className="overflow-x-hidden w-72 block text-ellipsis whitespace-nowrap hover:font-bold">
+            <span className="overflow-x-hidden w-64 md:w-72 block text-ellipsis whitespace-nowrap hover:font-bold">
               http://localhost:5173?connection={connection}
             </span>
           </button>
@@ -95,17 +95,19 @@ export default function Invite({ connection }: { connection: string }) {
       <div className="text-center">Or give them your card</div>
       <div className="">
         <div
-          className="p-4 bg-black rounded-md border border-white flex justify-between"
+          className="p-4 bg-black rounded-md border border-white flex flex-col md:flex-row justify-between"
           ref={cardRef}
         >
           <div className="flex flex-col">
-            <div>
+            <div className="">
               <div>Join {campName}!</div>
               <div className="text-base -mt-2">Peer support group</div>
             </div>
-            <div className="mt-auto">Scan this QR code.</div>
+            <div className="mt-4 md:mt-auto text-center md:text-left mb-4 md:mb-0">
+              Scan this QR code.
+            </div>
           </div>
-          <div ref={ref} />
+          <div className="mx-auto md:mx-0" ref={ref} />
         </div>
         <div className="text-right mt-4">
           <button

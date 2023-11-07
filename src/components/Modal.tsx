@@ -18,7 +18,10 @@ export default function Modal({ open, handleOpen, children }: Props) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <div className="" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="grow flex items-center justify-center p-4 max-w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
             {children}
           </div>
         </motion.div>

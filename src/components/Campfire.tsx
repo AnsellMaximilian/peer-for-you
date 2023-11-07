@@ -135,13 +135,13 @@ export default function Campfire({ connection }: { connection: string }) {
         <AnimatePresence>
           {currentDisplayedMessage && (
             <motion.div
-              className="absolute bg-white text-black text-xl rounded-md bottom-32 left-[50%] translate-x-12"
+              className="absolute bg-white text-black text-xl rounded-md bottom-32 left-[50%] -translate-x-1/2 md:translate-x-12"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <div className="absolute bg-white h-3 w-3 top-[calc(100%+3px)] right-[calc(100%+3px)]"></div>
-              <div className="absolute bg-white h-2 w-2 top-[calc(100%+18px)] right-[calc(100%+18px)]"></div>
+              <div className="hidden md:block absolute bg-white h-3 w-3 top-[calc(100%+3px)] right-[calc(100%+3px)]"></div>
+              <div className="hidden md:block absolute bg-white h-2 w-2 top-[calc(100%+18px)] right-[calc(100%+18px)]"></div>
               <div className="w-64 max-h-64 p-4 overflow-y-auto">
                 {currentDisplayedMessage.content}
               </div>
@@ -191,7 +191,7 @@ export default function Campfire({ connection }: { connection: string }) {
               Chat
             </button>
           </form>
-          <div>
+          <div className="fixed top-4 left-4 md:static md:top-0 md:left-0">
             <button
               onClick={() => setInviteModalOpen(true)}
               className="border-white border-2 rounded-md px-4 py-2 font-bold hover:opacity-60"

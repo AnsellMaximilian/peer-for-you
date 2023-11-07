@@ -45,7 +45,7 @@ function App() {
   }, [setCampName, setCampfireMode]);
 
   return (
-    <div className="h-screen bg-black flex flex-col items-center justify-center text-white">
+    <div className="h-screen bg-black flex flex-col items-center justify-center text-white overflow-hidden">
       <AnimatePresence mode="wait">
         {campfireMode && isConnectionValid(connection) ? (
           <motion.div
@@ -66,11 +66,22 @@ function App() {
         ) : (
           <motion.div key="intro" exit={{ opacity: 0 }}>
             <motion.h1
-              className="text-6xl relative"
+              className="text-6xl relative hidden md:block"
               initial={{ scale: 2, y: "-50%", top: "50%" }}
               animate={{
                 scale: 1,
-
+                y: 0,
+                top: 0,
+              }}
+              transition={{ delay: 3 }}
+            >
+              Peer for You
+            </motion.h1>
+            <motion.h1
+              className="text-6xl relative block md:hidden"
+              initial={{ scale: 1.25, y: "-50%", top: "50%" }}
+              animate={{
+                scale: 1,
                 y: 0,
                 top: 0,
               }}
