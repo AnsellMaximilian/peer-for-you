@@ -173,6 +173,7 @@ export default function Campfire({ connection }: { connection: string }) {
               placeholder="Chat message"
               value={messageContent}
               onChange={(e) => setMessageContent(e.target.value)}
+              extraClassName="w-64"
             />
             <button
               type="submit"
