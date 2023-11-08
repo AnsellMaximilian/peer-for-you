@@ -1,6 +1,7 @@
 import campFire from "../assets/campfire.svg";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import { useCamp } from "../context/CampContext";
+import { generate } from "random-words";
 import PeerMember from "./PeerMember";
 import { useSpace, useMembers } from "@ably/spaces/react";
 import { useAbly } from "ably/react";
@@ -11,7 +12,8 @@ import Input from "./Input";
 import { useUser } from "../context/UserContext";
 import Modal from "./Modal";
 import Invite from "./Invite";
-import { Message } from "../utils/types";
+import { MemberData, Message } from "../utils/types";
+import { generateMemberColor } from "../utils/helpers";
 
 const fireVariants: Variants = {
   animate: {
@@ -30,7 +32,7 @@ export default function Campfire({ connection }: { connection: string }) {
 
   const [, hostId] = connection.split(":");
 
-  const { members } = useMembers();
+  const { members, self } = useMembers();
 
   const { campName } = useCamp();
   const { id: userId } = useUser();
@@ -65,7 +67,12 @@ export default function Campfire({ connection }: { connection: string }) {
 
   useEffect(() => {
     if (space) {
-      space.enter({ id: userId });
+      const memberData: MemberData = {
+        id: userId,
+        color: generateMemberColor(),
+        username: generate({ exactly: 2, join: " " }),
+      };
+      space.enter(memberData);
     }
   }, [space, userId]);
 
@@ -130,9 +137,14 @@ export default function Campfire({ connection }: { connection: string }) {
         <AnimatePresence>
           {currentDisplayedMessage && (
             <motion.div
-              className="absolute bg-white text-black text-xl rounded-md bottom-32 left-[50%] -translate-x-1/2 md:translate-x-12"
+              className={`absolute bg-white text-black text-xl rounded-md bottom-32 left-[50%] -translate-x-1/2 md:translate-x-12`}
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              animate={{
+                opacity: 1,
+                backgroundColor: currentDisplayedMessage.color
+                  ? currentDisplayedMessage.color
+                  : "white",
+              }}
               exit={{ opacity: 0 }}
             >
               <div className="hidden md:block absolute bg-white h-3 w-3 top-[calc(100%+3px)] right-[calc(100%+3px)]"></div>
@@ -140,11 +152,11 @@ export default function Campfire({ connection }: { connection: string }) {
               <div className="w-64 max-h-64 p-4 overflow-y-auto">
                 {currentDisplayedMessage.content}
               </div>
-              {hostId === currentDisplayedMessage.userId && (
-                <div className="absolute top-0 left-0 font-bold text-xs pl-2 pt-1">
-                  Host
-                </div>
-              )}
+              <div className="absolute top-0 left-0 font-bold text-xs pl-2 pt-1">
+                {hostId === currentDisplayedMessage.userId
+                  ? "Host"
+                  : currentDisplayedMessage.username}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -161,11 +173,14 @@ export default function Campfire({ connection }: { connection: string }) {
             onSubmit={(e) => {
               e.preventDefault();
 
-              if (!currentDisplayedMessage && messageContent) {
+              if (!currentDisplayedMessage && messageContent && self) {
+                const memberData = self.profileData as MemberData;
                 const msg: Message = {
                   id: uuidv4(),
                   content: messageContent,
                   userId: userId,
+                  color: memberData.color,
+                  username: memberData.username,
                 };
                 setMessageContent("");
                 chatChannel.publish("add", msg);

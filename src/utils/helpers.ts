@@ -64,3 +64,42 @@ export const copyElementToClipboard = async (el: HTMLElement) => {
     return false;
   }
 };
+
+export function generateNumberWithMinDistance(
+  existingNumbers: number[],
+  minDistance: number
+) {
+  let generatedNumber: number;
+  let isFarEnough = false;
+
+  do {
+    // Generate a random number between 0 and 360
+    generatedNumber = Math.random() * 360;
+
+    // Check if the generated number is at least minDistance away from all existing numbers
+    isFarEnough = existingNumbers.every(
+      (num) => Math.abs(num - generatedNumber) >= minDistance
+    );
+  } while (!isFarEnough);
+
+  return generatedNumber;
+}
+
+export const generateMemberColor = () => {
+  return `hsl(${Math.floor(Math.random() * 361)}%, 100%, 93%)`;
+
+  // const hueRegex = /hsl\((\d{1,3})/;
+  // const usedValues = members.map((m) => {
+  //   const profileData: MemberData = m.profileData as MemberData;
+
+  //   const match = profileData.color.match(hueRegex);
+  //   if (match) {
+  //     const hueValue = parseInt(match[1], 10);
+
+  //     return hueValue;
+  //   }
+
+  //   return 0;
+  // });
+  // return `hsl(${generateNumberWithMinDistance(usedValues, 25)}%, 100%, 93%)`;
+};
