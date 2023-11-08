@@ -86,7 +86,7 @@ export function generateNumberWithMinDistance(
 }
 
 export const generateMemberColor = () => {
-  return `hsl(${Math.floor(Math.random() * 361)}%, 100%, 93%)`;
+  return `hsl(${Math.floor(Math.random() * 361)}, 100%, 93%)`;
 
   // const hueRegex = /hsl\((\d{1,3})/;
   // const usedValues = members.map((m) => {

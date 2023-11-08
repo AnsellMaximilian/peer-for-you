@@ -41,8 +41,6 @@ export default function Campfire({ connection }: { connection: string }) {
 
   const [messageContent, setMessageContent] = useState("");
 
-  const [messages, setMessages] = useState<Message[]>([]);
-
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
   const [currentDisplayedMessage, setCurrentDisplayedMessage] =
@@ -55,7 +53,6 @@ export default function Campfire({ connection }: { connection: string }) {
   useEffect(() => {
     const listener = (ablyMessage: Types.Message) => {
       const message = ablyMessage.data as Message;
-      setMessages((prev) => [...prev, message]);
       setCurrentDisplayedMessage(message);
     };
     chatChannel.subscribe(listener);
@@ -161,11 +158,17 @@ export default function Campfire({ connection }: { connection: string }) {
           )}
         </AnimatePresence>
       </div>
-      <div className="absolute inset-x-4 bottom-4 border border-white rounded-md p-4">
-        <div className="flex-col gap-2 hidden">
-          {messages.map((m) => (
-            <div key={m.id}>{m.content}</div>
-          ))}
+      <div className="absolute inset-x-4 bottom-4">
+        <div className="mb-1">
+          As{" "}
+          <span
+            className="font-bold"
+            style={{
+              color: self?.profileData?.color as string,
+            }}
+          >
+            {(self?.profileData as MemberData)?.username}
+          </span>
         </div>
         <div className="flex justify-between">
           <form
@@ -201,7 +204,7 @@ export default function Campfire({ connection }: { connection: string }) {
               Chat
             </button>
           </form>
-          <div className="fixed top-4 left-4 md:static md:top-0 md:left-0">
+          <div className="fixed top-4 left-4 md:static md:top-0 md:left-0 flex gap-4 items-center">
             <button
               onClick={() => setInviteModalOpen(true)}
               className="border-white border-2 rounded-md px-4 py-2 font-bold hover:opacity-60"
