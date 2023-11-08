@@ -11,12 +11,7 @@ import Input from "./Input";
 import { useUser } from "../context/UserContext";
 import Modal from "./Modal";
 import Invite from "./Invite";
-
-export type Message = {
-  id: string;
-  content: string;
-  userId?: string;
-};
+import { Message } from "../utils/types";
 
 const fireVariants: Variants = {
   animate: {
