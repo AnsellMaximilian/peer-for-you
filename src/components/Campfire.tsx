@@ -147,8 +147,8 @@ export default function Campfire({ connection }: { connection: string }) {
               }}
               exit={{ opacity: 0 }}
             >
-              <div className="hidden md:block absolute bg-white h-3 w-3 top-[calc(100%+3px)] right-[calc(100%+3px)]"></div>
-              <div className="hidden md:block absolute bg-white h-2 w-2 top-[calc(100%+18px)] right-[calc(100%+18px)]"></div>
+              <div className="hidden md:block absolute h-3 w-3 top-[calc(100%+3px)] right-[calc(100%+3px)] bg-inherit"></div>
+              <div className="hidden md:block absolute h-2 w-2 top-[calc(100%+18px)] right-[calc(100%+18px)] bg-inherit"></div>
               <div className="w-64 max-h-64 p-4 overflow-y-auto">
                 {currentDisplayedMessage.content}
               </div>
