@@ -44,7 +44,7 @@ export default function Invite({ connection }: { connection: string }) {
   useEffect(() => {
     qrCode.append(ref.current ? ref.current : undefined);
     qrCode.update({
-      data: `http://localhost:3000?connection=${connection}`,
+      data: `${window.location.href}?connection=${connection}`,
     });
   }, [connection]);
 
@@ -70,7 +70,7 @@ export default function Invite({ connection }: { connection: string }) {
             onClick={() => {
               setShowCopyTooltip(true);
               copyTextToClipboard(
-                `http://localhost:5173?connection=${connection}`
+                `${window.location.href}?connection=${connection}`
               );
             }}
           >
@@ -87,7 +87,7 @@ export default function Invite({ connection }: { connection: string }) {
               )}
             </AnimatePresence>
             <span className="overflow-x-hidden w-64 md:w-72 block text-ellipsis whitespace-nowrap hover:font-bold">
-              http://localhost:5173?connection={connection}
+              {window.location.href}?connection={connection}
             </span>
           </button>
         </div>
