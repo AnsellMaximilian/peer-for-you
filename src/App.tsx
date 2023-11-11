@@ -9,7 +9,11 @@ import { useCamp } from "./context/CampContext";
 import { motion, AnimatePresence } from "framer-motion";
 import Spaces from "@ably/spaces";
 import { useState, useEffect } from "react";
-import { getConnectionFromURL, isConnectionValid } from "./utils/helpers";
+import {
+  getConnectionFromURL,
+  isConnectionStringValid,
+  isConnectionValid,
+} from "./utils/helpers";
 import { useUser } from "./context/UserContext";
 
 const client = new Realtime.Promise({
@@ -36,7 +40,7 @@ function App() {
   useEffect(() => {
     const connectionFromURL = getConnectionFromURL();
 
-    if (connectionFromURL) {
+    if (connectionFromURL && isConnectionStringValid(connectionFromURL)) {
       const [, , campName] = connectionFromURL.split(":");
       setConnection(connectionFromURL);
       setCampfireMode(true);

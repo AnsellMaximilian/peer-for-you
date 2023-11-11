@@ -103,3 +103,9 @@ export const generateMemberColor = () => {
   // });
   // return `hsl(${generateNumberWithMinDistance(usedValues, 25)}%, 100%, 93%)`;
 };
+
+export const isConnectionStringValid = (connection: string) => {
+  const [campId, userId, campName] = connection.split(":");
+
+  return campId && userId && campName;
+};
